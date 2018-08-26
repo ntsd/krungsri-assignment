@@ -15,7 +15,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(nullable = false, length = 50, updatable=false)
+    @Column(nullable = false, length = 50, updatable = false, unique = true)
     @Email(message = "Email should be valid")
     private String email;
 
@@ -50,7 +50,7 @@ public class User {
             columnDefinition="TINYINT unsigned COMMENT '0 for Silver, 1 for Gold, 2 for Platinum'")
     private MemberType memberType;
 
-    @Column(name = "reference_code", updatable=false)
+    @Column(name = "reference_code", updatable = false)
     private Long referenceCode;
 
     public User() {
@@ -156,12 +156,7 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return id.equals(user.id) &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(address, user.address) &&
-                salary.equals(user.salary) &&
-                Objects.equals(phoneNumber, user.phoneNumber);
+        return this.hashCode() == user.hashCode();
     }
 
     @Override

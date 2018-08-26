@@ -1,5 +1,6 @@
 package com.example.userservice.user;
 
+import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +25,8 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     private User initUser;
+
+    private Gson gson = new Gson();
 
     @Before
     public void init(){
@@ -57,12 +60,20 @@ public class UserServiceTest {
 
     @Test
     public void updateUserTest () {
-        User newUser = new User();
-        newUser.setName("Name Test");
-        newUser.setEmail("test@gmail.com");
-        newUser.setAddress("Address Test");
-        User user = userService.updateUser(44 ,initUser);
+        User user = new User();
+        user.setId(44);
+        user.setName("Name Test");
+        user.setEmail("test@gmail.com");
+        user.setAddress("Address Test");
+        user.setSalary(40000);
 
+        User newUser = gson.fromJson(gson.toJson(user), User.class);
+        newUser.setMemberType(User.MemberType.GOLD);
+        when(userRepository.save(newUser)).thenReturn(newUser);
+
+        User userReturn = userService.updateUser(44 ,user);
+        assertEquals(newUser.getName(), userReturn.getName());
+        assertEquals(newUser.getMemberType(), userReturn.getMemberType());
     }
 
     @Test

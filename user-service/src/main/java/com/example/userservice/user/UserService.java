@@ -58,6 +58,12 @@ public class UserService {
 
     User updateUser (Integer id, User newUser) {
         newUser.setId(id);
+        if (newUser.getSalary() != null) {
+            if (newUser.getSalary() < 15000) {
+                throw new UserSalaryTooLowException(String.format("Salary should not less than 15000 get %d", newUser.getSalary()));
+            }
+            newUser.setMemberType(getMemberType(newUser.getSalary()));
+        }
         return userRepository.save(newUser);
     }
 

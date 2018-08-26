@@ -9,13 +9,18 @@ public class Authentication {
     @Id
     private Integer id;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 20, unique = true)
     private String username;
 
     @Column(nullable = false, length = 60)
     private String password;
 
-    @Column(name="role", columnDefinition="varchar(12) default 'user'")
+    enum Role {
+        USER,
+        ADMIN
+    }
+
+    @Column(name="role", columnDefinition="varchar(12) default 'USER'")
     private String role;
 
     public Authentication() {

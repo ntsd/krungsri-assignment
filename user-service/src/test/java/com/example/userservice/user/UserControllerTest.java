@@ -61,7 +61,7 @@ public class UserControllerTest {
         when(userService.saveUser(testUser)).thenReturn(initUser);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/users")
+                .post("/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(testUser));
 
@@ -79,7 +79,7 @@ public class UserControllerTest {
         when(userService.getOneUser(44)).thenReturn(initUser);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/users/44")
+                .get("/44")
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
@@ -88,6 +88,27 @@ public class UserControllerTest {
                         "'address':'This is example adress','salary':70000,'phoneNumber':'845916998'," +
                         "'registerDate':'"+new SimpleDateFormat("yyyy-MM-dd").format(initUser.getRegisterDate()) +
                         "','memberType':'SILVER','referenceCode':201800000000}"))
+                .andReturn();
+    }
+
+    @Test
+    public void updateUserTest () throws Exception {
+        User testUser = new User();
+        testUser.setId(44);
+        testUser.setName("test name");
+        testUser.setEmail("email@gmail.com");
+        testUser.setAddress("This is example address");
+        testUser.setSalary(20000);
+        testUser.setPhoneNumber("845916998");
+
+        when(userService.updateUser(44, testUser)).thenReturn(testUser);
+        RequestBuilder request = MockMvcRequestBuilders
+                .patch("/44")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(testUser));
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
                 .andReturn();
     }
 }

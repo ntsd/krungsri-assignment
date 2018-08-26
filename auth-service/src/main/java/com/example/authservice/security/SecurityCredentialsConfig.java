@@ -16,15 +16,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userDetailsService;
-
-    private final JwtConfig jwtConfig;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Autowired
-    public SecurityCredentialsConfig(UserDetailsService userDetailsService, JwtConfig jwtConfig) {
-        this.userDetailsService = userDetailsService;
-        this.jwtConfig = jwtConfig;
-    }
+    private JwtConfig jwtConfig;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -37,6 +33,7 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig))
             .authorizeRequests()
                 .antMatchers(HttpMethod.POST, jwtConfig.getUrl()).permitAll()
+                .antMatchers(HttpMethod.POST, "/create_auth").permitAll()
                 .anyRequest().authenticated();
     }
 
