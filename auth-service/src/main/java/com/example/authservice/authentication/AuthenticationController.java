@@ -10,8 +10,12 @@ import javax.validation.Valid;
 @RestController
 public class AuthenticationController {
 
+    private final AuthenticationService authService;
+
     @Autowired
-    private AuthenticationService authService;
+    public AuthenticationController(AuthenticationService authService) {
+        this.authService = authService;
+    }
 
     @PostMapping("/create_auth")
     public void createAuthentication(@Valid @RequestBody Authentication auth) {

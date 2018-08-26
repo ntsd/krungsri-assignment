@@ -1,8 +1,9 @@
 package com.example.authservice.authentication;
 
-import java.util.Arrays;
 import java.util.List;
 
+import com.example.authservice.authentication.exception.AuthenticationIdAlreadyExistException;
+import com.example.authservice.authentication.exception.AuthenticationUsernameAlreadyExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -16,11 +17,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationService implements UserDetailsService  {
 
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    private final AuthenticationRepository authRepository;
 
     @Autowired
-    private AuthenticationRepository authRepository;
+    public AuthenticationService(AuthenticationRepository authRepository) {
+        this.authRepository = authRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username){
@@ -36,9 +40,18 @@ public class AuthenticationService implements UserDetailsService  {
     }
 
     public void createAuthentication(Authentication auth) {
-        auth.setPassword(encoder.encode(auth.getPassword()));
-        auth.setRole("USER");
-        authRepository.save(auth);
+        if (!authRepository.existsById(auth.getId())) {
+            try {
+                auth.setPassword(encoder.encode(auth.getPassword()));
+                auth.setRole(Authentication.Role.USER);
+                authRepository.save(auth);
+            }
+            catch (Exception e) {
+                throw new AuthenticationUsernameAlreadyExistException("Authentication Username: " + auth.getUsername() + " already exist");
+            }
+        }
+        else {
+            throw new AuthenticationIdAlreadyExistException("Authentication ID: " + auth.getId() + " already exist");
+        }
     }
-
 }

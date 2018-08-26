@@ -8,4 +8,5 @@ public interface AuthenticationRepository extends CrudRepository<Authentication,
 
     @Query("SELECT a FROM Authentication a where a.username = :username")
     Authentication findByUsername(@Param("username") String username);
+
 }

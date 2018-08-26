@@ -1,8 +1,6 @@
 package com.example.authservice.authentication;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Authentication {
@@ -15,18 +13,19 @@ public class Authentication {
     @Column(nullable = false, length = 60)
     private String password;
 
-    enum Role {
+    public enum Role {
         USER,
         ADMIN
     }
 
-    @Column(name="role", columnDefinition="varchar(12) default 'USER'")
-    private String role;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name="role", columnDefinition="TINYINT default 0")
+    private Role role;
 
     public Authentication() {
     }
 
-    public Authentication(Integer id, String username, String password, String role) {
+    public Authentication(Integer id, String username, String password, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -57,11 +56,11 @@ public class Authentication {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }
