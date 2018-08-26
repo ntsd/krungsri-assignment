@@ -7,11 +7,11 @@ Microservice using Spring Boot and JPA
 
 ##### Service Diagram
 
-#### ![service-diagram](images\service-diagram.jpg)
+#### ![service-diagram](images/service-diagram.jpg)
 
 ##### Class Diagram
 
-![class-diagram](images\class-diagram.jpg)
+![class-diagram](images/class-diagram.jpg)
 
 
 
