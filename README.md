@@ -58,7 +58,7 @@ ex. `cd eureka-server && mvn package -DskipTests && java -jar target/eureka-serv
 
 Naming server to map server IP Address to name
 
-#####run
+##### run
 
 ```
 mvn package -DskipTests && java -jar target/eureka-server-0.0.1-SNAPSHOT.jar
@@ -68,13 +68,13 @@ mvn package -DskipTests && java -jar target/eureka-server-0.0.1-SNAPSHOT.jar
 
 User Service to manage user in system. created for create, get, update, delete. you can change database config in resource.
 
-#####run & test 
+##### run & test 
 
 ```
 mvn package && java -jar target/user-service-0.0.1-SNAPSHOT.jar
 ```
 
-#####test
+##### test
 
 ```
 mvn package && java -jar target/user-service-0.0.1-SNAPSHOT-tests.jar
@@ -84,13 +84,13 @@ mvn package && java -jar target/user-service-0.0.1-SNAPSHOT-tests.jar
 
 Authentication service base on JWT. private key is HMAC-SHA256 signature. you can change private key and database config in resource.
 
-#####run & test 
+##### run & test 
 
 ```
 mvn package && java -jar target/auth-service-0.0.1-SNAPSHOT.jar
 ```
 
-#####test
+#####  test
 
 ```
 mvn package && java -jar target/auth-service-0.0.1-SNAPSHOT-tests.jar
@@ -100,7 +100,7 @@ mvn package && java -jar target/auth-service-0.0.1-SNAPSHOT-tests.jar
 
 API Gateway to every service at port 9000. use this port to map to public. all request will filter by security.
 
-#####run
+#####  run
 
 ```
 mvn package -DskipTests && java -jar target/api-gateway-0.0.1-SNAPSHOT.jar
@@ -128,32 +128,40 @@ create user first
 
 `POST http://localhost:9000/users`
 
-{
+```{
+{	
 	"name" : "test name",
 	"email" : "email@gmail.com",
 	"salary" :50000,
 	"phoneNumber" : "+66 845916998",
-	"address": "This is example adress"
-}
+	"address": "This is example adress"``
+}`
+```
 
 you will get user id and then create auth 
 
 `POST http://localhost:9000/create_auth`
 
+```
 {
 	"id": user_id,
 	"username" : "test",
 	"password" : "test"
 }
+```
+
+
 
 auth by username and password
 
 `POST http://localhost:9000/auth`
 
+```
 {
 	"username" : "test",
 	"password" : "test"
 }
+```
 
 you will get JWT in header and JSON body
 
@@ -197,7 +205,7 @@ so JSON data from POST '/users' should contain username and password
 | /users/:Id | PATCH  | Update User          | Only User with same Id |
 | /users/:Id | DELETE | Delete User          | Only ADMIN Role        |
 
-#####User Object
+##### User Object
 
 | Field          | Type    | Required | *Can Create | **Can Edit | Description                                                  |
 | -------------- | ------- | -------- | ----------- | ---------- | ------------------------------------------------------------ |
