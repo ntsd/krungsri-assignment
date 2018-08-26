@@ -54,7 +54,7 @@ all services command need to change to project directory before run
 
 ex. `cd eureka-server && mvn package -DskipTests && java -jar target/eureka-server-0.0.1-SNAPSHOT.jar`
 
-####4.1 Eureka Server (Naming Server)
+#### 4.1 Eureka Server (Naming Server)
 
 Naming server to map server IP Address to name
 
@@ -80,7 +80,7 @@ mvn package && java -jar target/user-service-0.0.1-SNAPSHOT.jar
 mvn package && java -jar target/user-service-0.0.1-SNAPSHOT-tests.jar
 ```
 
-####4.3 Authentication Service
+#### 4.3 Authentication Service
 
 Authentication service base on JWT. private key is HMAC-SHA256 signature. you can change private key and database config in resource.
 
@@ -96,7 +96,7 @@ mvn package && java -jar target/auth-service-0.0.1-SNAPSHOT.jar
 mvn package && java -jar target/auth-service-0.0.1-SNAPSHOT-tests.jar
 ```
 
-####4.4 Zuul (API Gateway)
+#### 4.4 Zuul (API Gateway)
 
 API Gateway to every service at port 9000. use this port to map to public. all request will filter by security.
 
