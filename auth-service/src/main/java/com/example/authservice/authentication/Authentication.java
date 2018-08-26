@@ -19,7 +19,7 @@ public class Authentication {
     }
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name="role", columnDefinition="TINYINT default 0")
+    @Column(name="role", columnDefinition="TINYINT default 0 COMMENT '0 for USER, 1 for ADMIN'")
     private Role role;
 
     public Authentication() {

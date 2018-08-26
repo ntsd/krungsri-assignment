@@ -43,7 +43,7 @@ public class AuthenticationService implements UserDetailsService  {
         if (!authRepository.existsById(auth.getId())) {
             try {
                 auth.setPassword(encoder.encode(auth.getPassword()));
-                auth.setRole(Authentication.Role.USER);
+                // auth.setRole(Authentication.Role.USER);
                 authRepository.save(auth);
             }
             catch (Exception e) {

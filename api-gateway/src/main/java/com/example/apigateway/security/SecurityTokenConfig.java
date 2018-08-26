@@ -13,17 +13,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
-    private final JwtConfig jwtConfig;
-
     @Autowired
-    public SecurityTokenConfig(JwtConfig jwtConfig) {
-        this.jwtConfig = jwtConfig;
-    }
+    private JwtConfig jwtConfig;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()
+            .csrf().disable() // remove before production
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
             .exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
@@ -31,6 +27,9 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
             .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
         .authorizeRequests()
             .antMatchers(HttpMethod.POST, jwtConfig.getUrl()).permitAll()
+            .antMatchers(HttpMethod.POST, "/create_auth/").permitAll()
+            .antMatchers(HttpMethod.POST, "/users/").permitAll()
+            .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
             .anyRequest().authenticated();
     }
 

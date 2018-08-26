@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,11 +28,15 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
     private final JwtConfig jwtConfig;
 
-    private Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    ObjectMapper mapper = new ObjectMapper();
 
+    private SecretKey key;
+        
     public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authManager, JwtConfig jwtConfig) {
         this.authManager = authManager;
         this.jwtConfig = jwtConfig;
+
+        key = Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes());
 
         this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(jwtConfig.getUrl(), "POST"));
     }
@@ -65,7 +70,31 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                 .setExpiration(new Date(now + jwtConfig.getExpiration() * 1000))
                 .signWith(key)
                 .compact();
-
+        AuthenticationJson authJson = new AuthenticationJson(token, "bearer");
+        try {
+            response.getWriter().write(mapper.writeValueAsString(authJson));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        response.setContentType("application/json");
         response.addHeader(jwtConfig.getHeader(), jwtConfig.getPrefix() + token);
+    }
+
+    private static class AuthenticationJson {
+        private String access_token;
+        private String token_type;
+
+        public AuthenticationJson(String access_token, String token_type) {
+            this.access_token = access_token;
+            this.token_type = token_type;
+        }
+
+        public String getAccess_token() {
+            return access_token;
+        }
+
+        public String getToken_type() {
+            return token_type;
+        }
     }
 }

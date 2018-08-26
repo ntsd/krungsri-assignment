@@ -43,13 +43,21 @@ public class JwtTokenAuthenticationFilter extends  OncePerRequestFilter {
                     .parseClaimsJws(token)
                     .getBody();
 
-            String username = claims.getSubject();
-            if(username != null) {
+            String userId = claims.getSubject();
+            if (request.getRequestURI().startsWith("/users/") && request.getMethod().equals("PATCH")) {
+                String urlId = request.getRequestURI().replace("/users/", "");
+                if (!urlId.equals(userId)) {
+                    response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "You can't update ID " + urlId + " by ID " + userId);
+                    throw new Exception();
+                }
+            }
+
+            if(userId != null) {
                 @SuppressWarnings("unchecked")
                 List<String> authorities = (List<String>) claims.get("authorities");
 
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        username, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+                        userId, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
